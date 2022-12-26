@@ -23,7 +23,7 @@ def TestOneInput(data):
     except (shapefile.ShapefileException, struct.error, UnicodeDecodeError):
         return -1
     except ValueError as e:
-        if random.random() > 0.999:
+        if random.random() > 0.99:
             raise
         return -1
 
