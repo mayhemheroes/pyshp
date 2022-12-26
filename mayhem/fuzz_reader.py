@@ -3,13 +3,33 @@
 import atheris
 import sys
 import fuzz_helpers
-import random
+import os
 
 # Errors
 import struct
 
 with atheris.instrument_imports(include=['shapefile']):
     import shapefile
+
+
+def throw_once(err: Exception) -> bool:
+    """Throw an exception once"""
+    if not os.path.exists('/tmp/errors'):
+        os.mkdir('/tmp/errors')
+    file_name = err.__class__
+    fp = f'/tmp/errors/{file_name}'
+
+    if os.path.exists(fp):
+        return False
+    else:
+        with open(fp, 'w+') as f:
+            f.write('raised')
+        return True
+
+
+def handle_single_raise(err: Exception):
+    if throw_once(err):
+        raise err
 
 
 def TestOneInput(data):
@@ -23,8 +43,7 @@ def TestOneInput(data):
     except (shapefile.ShapefileException, struct.error, UnicodeDecodeError):
         return -1
     except ValueError as e:
-        if random.random() > 0.99:
-            raise
+        handle_single_raise(e)
         return -1
 
 
