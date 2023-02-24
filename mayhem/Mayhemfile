@@ -1,0 +1,10 @@
+project: pyshp
+target: fuzz-reader
+testsuite:
+    - file://mayhem/testsuite
+
+cmds:
+  - cmd: /src/mayhem/fuzz_reader.py
+    libfuzzer: true
+    timeout: 20
+    max_length: 210000
